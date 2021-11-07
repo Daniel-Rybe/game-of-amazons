@@ -137,11 +137,19 @@ var Board = function (_React$Component4) {
   _createClass(Board, [{
     key: "onMouseDown",
     value: function onMouseDown(e) {
+
       if (this.state.phase != 0) return;
+      var pageX = e.pageX;
+      var pageY = e.pageY;
+
+      if (e.type == "touchstart") {
+        pageX = e.touches[0].pageX;
+        pageY = e.touches[0].pageY;
+      }
 
       var currentTargetRect = e.currentTarget.getBoundingClientRect();
-      var x = (e.pageX - currentTargetRect.left) * 6 / this.props.size;
-      var y = (e.pageY - currentTargetRect.top) * 6 / this.props.size;
+      var x = (pageX - currentTargetRect.left) * 6 / this.props.size;
+      var y = (pageY - currentTargetRect.top) * 6 / this.props.size;
       var i = ~~x;
       var j = ~~y;
 
@@ -164,9 +172,17 @@ var Board = function (_React$Component4) {
       if (this.state.phase != 0) return;
       if (this.state.activePieceIndex == -1) return;
 
+      var pageX = e.pageX;
+      var pageY = e.pageY;
+
+      if (e.type == "touchmove") {
+        pageX = e.touches[0].pageX;
+        pageY = e.touches[0].pageY;
+      }
+
       var currentTargetRect = e.currentTarget.getBoundingClientRect();
-      var x = (e.pageX - currentTargetRect.left) * 6 / this.props.size;
-      var y = (e.pageY - currentTargetRect.top) * 6 / this.props.size;
+      var x = (pageX - currentTargetRect.left) * 6 / this.props.size;
+      var y = (pageY - currentTargetRect.top) * 6 / this.props.size;
 
       var newPieces = this.state.pieces.copyWithin();
       newPieces[this.state.activePieceIndex].x = x - 0.5;
@@ -198,9 +214,17 @@ var Board = function (_React$Component4) {
         ws.send(JSON.stringify({ type: "move", prevX: this.lastI, prevY: this.lastJ, newX: x, newY: y }));
         this.setState({ pieces: newPieces, phase: 1 });
       } else if (this.state.phase == 1) {
+        var pageX = e.pageX;
+        var pageY = e.pageY;
+
+        if (e.type == "touchend") {
+          pageX = e.touches[0].pageX;
+          pageY = e.touches[0].pageY;
+        }
+
         var currentTargetRect = e.currentTarget.getBoundingClientRect();
-        var _x = ~~((e.pageX - currentTargetRect.left) * 6 / this.props.size);
-        var _y = ~~((e.pageY - currentTargetRect.top) * 6 / this.props.size);
+        var _x = ~~((pageX - currentTargetRect.left) * 6 / this.props.size);
+        var _y = ~~((pageY - currentTargetRect.top) * 6 / this.props.size);
 
         this.lastI = this.state.pieces[this.state.activePieceIndex].x;
         this.lastJ = this.state.pieces[this.state.activePieceIndex].y;

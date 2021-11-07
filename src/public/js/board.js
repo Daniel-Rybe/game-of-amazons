@@ -100,11 +100,19 @@ class Board extends React.Component {
   }
 
   onMouseDown(e) {
+
     if (this.state.phase != 0) return;
+    let pageX = e.pageX;
+    let pageY = e.pageY;
+
+    if (e.type == "touchstart") {
+      pageX = e.touches[0].pageX;
+      pageY = e.touches[0].pageY;
+    }
 
     let currentTargetRect = e.currentTarget.getBoundingClientRect();
-    let x = (e.pageX - currentTargetRect.left) * 6 / this.props.size;
-    let y = (e.pageY - currentTargetRect.top) * 6 / this.props.size;
+    let x = (pageX - currentTargetRect.left) * 6 / this.props.size;
+    let y = (pageY - currentTargetRect.top) * 6 / this.props.size;
     let i = ~~x;
     let j = ~~y;
     
@@ -126,9 +134,17 @@ class Board extends React.Component {
     if (this.state.phase != 0) return;
     if (this.state.activePieceIndex == -1) return;
 
+    let pageX = e.pageX;
+    let pageY = e.pageY;
+
+    if (e.type == "touchmove") {
+      pageX = e.touches[0].pageX;
+      pageY = e.touches[0].pageY;
+    }
+
     let currentTargetRect = e.currentTarget.getBoundingClientRect();
-    let x = (e.pageX - currentTargetRect.left) * 6 / this.props.size;
-    let y = (e.pageY - currentTargetRect.top) * 6 / this.props.size;
+    let x = (pageX - currentTargetRect.left) * 6 / this.props.size;
+    let y = (pageY - currentTargetRect.top) * 6 / this.props.size;
 
     let newPieces = this.state.pieces.copyWithin();
     newPieces[this.state.activePieceIndex].x = x - 0.5;
@@ -160,9 +176,17 @@ class Board extends React.Component {
       this.setState({pieces: newPieces, phase: 1});
     }
     else if (this.state.phase == 1) {
+      let pageX = e.pageX;
+      let pageY = e.pageY;
+
+      if (e.type == "touchend") {
+        pageX = e.touches[0].pageX;
+        pageY = e.touches[0].pageY;
+      }
+
       let currentTargetRect = e.currentTarget.getBoundingClientRect();
-      let x = ~~((e.pageX - currentTargetRect.left) * 6 / this.props.size);
-      let y = ~~((e.pageY - currentTargetRect.top) * 6 / this.props.size);
+      let x = ~~((pageX - currentTargetRect.left) * 6 / this.props.size);
+      let y = ~~((pageY - currentTargetRect.top) * 6 / this.props.size);
 
       this.lastI = this.state.pieces[this.state.activePieceIndex].x;
       this.lastJ = this.state.pieces[this.state.activePieceIndex].y;
