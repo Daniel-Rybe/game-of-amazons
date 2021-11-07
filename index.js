@@ -10,11 +10,9 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/html/index.html');
 });
 
-//testing
-app.get('/test', (req, res) => {
-	res.sendFile(__dirname + '/public/html/test.html');
+app.get('/rules', (req, res) => {
+	res.sendFile(__dirname + '/public/html/rules.html');
 });
-//testing
 
 const httpServer = app.listen(port);
 const wsServer = new ws.Server({noServer: true});
