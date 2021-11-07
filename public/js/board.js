@@ -131,6 +131,8 @@ var Board = function (_React$Component4) {
     _this4.onMouseDown = _this4.onMouseDown.bind(_this4);
     _this4.onMouseMove = _this4.onMouseMove.bind(_this4);
     _this4.onMouseUp = _this4.onMouseUp.bind(_this4);
+
+    game_board = _this4;
     return _this4;
   }
 

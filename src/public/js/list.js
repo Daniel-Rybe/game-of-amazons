@@ -102,6 +102,8 @@ class List extends React.Component {
 		this.buttons = {};
 
 		this.onclick = this.onclick.bind(this);
+
+		users_list = this;
 	}
 
 	onclick(name) {

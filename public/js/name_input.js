@@ -17,6 +17,8 @@ var NameInput = function (_React$Component) {
 		_this.state = { value: '' };
 		_this.handleChange = _this.handleChange.bind(_this);
 		_this.handleSubmit = _this.handleSubmit.bind(_this);
+
+		name_input = _this;
 		return _this;
 	}
 

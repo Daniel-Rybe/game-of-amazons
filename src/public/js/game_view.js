@@ -15,6 +15,7 @@ let mainContainer = document.querySelector("#main-container");
 let users_online = [];
 let users_list;
 let game_board;
+let name_input;
 
 function handleMessage(messageObj) {
 	console.log(messageObj);
@@ -24,8 +25,8 @@ function handleMessage(messageObj) {
 	switch (messageObj.type) {
 		case "set-name-result":
 			if (messageObj.result == "ok")
-				ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer, (ref) => {users_list = ref});
-			nameInput = undefined;
+				ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer);
+			name_input = undefined;
 			break;
 
 		case "current-player-list":
@@ -57,20 +58,20 @@ function handleMessage(messageObj) {
 			break;
 
 		case "get-ready-to-play":
-			ReactDOM.render(<Board size="300" myColor={messageObj.color} />, mainContainer, (ref) => {game_board = ref});
+			ReactDOM.render(<Board size="300" myColor={messageObj.color} />, mainContainer);
 			users_list = undefined;
 			ws.send(JSON.stringify({type: "ready-to-play"}));
 			break;
 
 		case "opponent-resigned":
 			alert("Opponent resigned. You win!");
-			ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer, (ref) => {users_list = ref});
+			ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer);
 			game_board = undefined;
 			break;
 
 		case "opponent-disconnected":
 			alert("Opponent disconnected. You win!");
-			ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer, (ref) => {users_list = ref});
+			ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer);
 			game_board = undefined;
 			break;
 
@@ -101,5 +102,4 @@ function handleMessage(messageObj) {
 	}
 }
 
-let nameInput;
-ReactDOM.render(<NameInput />, mainContainer, (ref) => {nameInput = ref});
+ReactDOM.render(<NameInput />, mainContainer);

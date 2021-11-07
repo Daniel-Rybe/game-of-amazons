@@ -15,6 +15,7 @@ var mainContainer = document.querySelector("#main-container");
 var users_online = [];
 var users_list = void 0;
 var game_board = void 0;
+var name_input = void 0;
 
 function handleMessage(messageObj) {
 	console.log(messageObj);
@@ -23,10 +24,8 @@ function handleMessage(messageObj) {
 
 	switch (messageObj.type) {
 		case "set-name-result":
-			if (messageObj.result == "ok") ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
-				users_list = ref;
-			});
-			nameInput = undefined;
+			if (messageObj.result == "ok") ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
+			name_input = undefined;
 			break;
 
 		case "current-player-list":
@@ -55,26 +54,20 @@ function handleMessage(messageObj) {
 			break;
 
 		case "get-ready-to-play":
-			ReactDOM.render(React.createElement(Board, { size: '300', myColor: messageObj.color }), mainContainer, function (ref) {
-				game_board = ref;
-			});
+			ReactDOM.render(React.createElement(Board, { size: '300', myColor: messageObj.color }), mainContainer);
 			users_list = undefined;
 			ws.send(JSON.stringify({ type: "ready-to-play" }));
 			break;
 
 		case "opponent-resigned":
 			alert("Opponent resigned. You win!");
-			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
-				users_list = ref;
-			});
+			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
 			game_board = undefined;
 			break;
 
 		case "opponent-disconnected":
 			alert("Opponent disconnected. You win!");
-			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
-				users_list = ref;
-			});
+			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
 			game_board = undefined;
 			break;
 
@@ -127,7 +120,4 @@ function handleMessage(messageObj) {
 	}
 }
 
-var nameInput = void 0;
-ReactDOM.render(React.createElement(NameInput, null), mainContainer, function (ref) {
-	nameInput = ref;
-});
+ReactDOM.render(React.createElement(NameInput, null), mainContainer);

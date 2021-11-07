@@ -135,6 +135,8 @@ var List = function (_React$Component3) {
 		_this3.buttons = {};
 
 		_this3.onclick = _this3.onclick.bind(_this3);
+
+		users_list = _this3;
 		return _this3;
 	}
 

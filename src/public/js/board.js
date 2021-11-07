@@ -95,6 +95,8 @@ class Board extends React.Component {
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
+
+    game_board = this;
   }
 
   onMouseDown(e) {
