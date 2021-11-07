@@ -75,7 +75,8 @@ class ListItem extends React.Component {
 
 	render(props) {
 		return (
-			<div className="list-item-wrapper">
+			<div className="list-item-wrapper"
+			style={{height: this.props.height}}>
 				<span className="list-name"
 				style={{width: this.props.width - this.props.height, height: this.props.height}} >
 				{this.props.name}
