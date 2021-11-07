@@ -20,7 +20,7 @@ type == "fire":
 
 server -> client:
 
-type: "set-name-result" | "player-join" | "player-leave" | "get-ready-to-play" | "move" | "fire" | "play-request-from" | "play-request-cancel-from" | "opponent-resigned" || "current-player-list" | "opponent-disconnected"
+type: "set-name-result" | "player-join" | "player-leave" | "get-ready-to-play" | "move" | "fire" | "play-request-from" | "play-request-cancel-from" | "opponent-resigned" || "current-player-list" | "opponent-disconnected" | "you-won" | "you-lost"
 
 type == "set-name-result":
 	result: "ok" | "name-taken"

@@ -74,8 +74,10 @@ function onMessage(message, socket) {
 				socket.wants = name;
 
 				if (users_online[name].wants == socket.name) {
-					users_online[name].send(JSON.stringify({type: "get-ready-to-play", color: "white", name: socket.name}));
-					socket.send(JSON.stringify({type: "get-ready-to-play", color: "black", name: name}));
+					let color1 = Math.random() > 0.5 ? "white" : "black";
+					let color2 = color1 == "white" ? "black" : "white";
+					users_online[name].send(JSON.stringify({type: "get-ready-to-play", color: color1, name: socket.name}));
+					socket.send(JSON.stringify({type: "get-ready-to-play", color: color2, name: name}));
 				} else {
 					users_online[name].send(JSON.stringify({type: "play-request-from", name: socket.name}));
 				}
@@ -110,6 +112,9 @@ function onMessage(message, socket) {
 
 		case "end-game":
 			if (!socket.plays || !users_online[socket.plays]) return;
+
+			socket.send(JSON.stringify({type: "you-won"}));
+			users_online[socket.plays].send(JSON.stringify({type: "you-lost"}));
 
 			delete users_online[socket.plays].plays;
 			delete socket.plays;

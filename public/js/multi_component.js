@@ -6,62 +6,46 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var NameInput = function (_React$Component) {
-	_inherits(NameInput, _React$Component);
+var MultiComponent = function (_React$Component) {
+	_inherits(MultiComponent, _React$Component);
 
-	function NameInput(props) {
-		_classCallCheck(this, NameInput);
+	function MultiComponent(props) {
+		_classCallCheck(this, MultiComponent);
 
-		var _this = _possibleConstructorReturn(this, (NameInput.__proto__ || Object.getPrototypeOf(NameInput)).call(this, props));
-		// width elements
+		var _this = _possibleConstructorReturn(this, (MultiComponent.__proto__ || Object.getPrototypeOf(MultiComponent)).call(this, props));
+		//boardSize listWidth listElemHeight
 
 
-		_this.state = { value: '' };
-		_this.handleChange = _this.handleChange.bind(_this);
-		_this.handleSubmit = _this.handleSubmit.bind(_this);
+		_this.state = { mode: "name-input", boardColor: "white" };
+		_this.elements = {};
 
-		_this.props.elements["name-input"] = _this;
+		mainComponent = _this;
 		return _this;
 	}
 
-	_createClass(NameInput, [{
-		key: "handleChange",
-		value: function handleChange(event) {
-			this.setState({ value: event.target.value });
-		}
-	}, {
-		key: "handleSubmit",
-		value: function handleSubmit(event) {
-			if (this.state.value != "") ws.send(JSON.stringify({ type: "set-name", name: this.state.value }));
-			event.preventDefault();
-		}
-	}, {
+	_createClass(MultiComponent, [{
 		key: "render",
 		value: function render() {
-			return React.createElement(
-				"div",
-				{ className: "name-input-wrapper",
-					style: { left: (window.innerWidth - this.props.width) / 2, top: 50, height: window.innerHeight - 100 } },
-				React.createElement(
-					"span",
-					null,
-					"Choose Name"
-				),
-				React.createElement(
-					"form",
-					{ onSubmit: this.handleSubmit },
-					React.createElement(
-						"label",
-						null,
-						React.createElement("input", { type: "text",
-							value: this.state.value,
-							onChange: this.handleChange,
-							style: { width: this.props.width - 6 } })
-					)
-				)
-			);
+			switch (this.state.mode) {
+				case "users-list":
+					delete this.elements["game-board"];
+					delete this.elements["name-input"];
+					return React.createElement(List, { width: this.props.listWidth,
+						elemHeight: this.props.listElemHeight,
+						elements: this.elements });
+				case "game-board":
+					delete this.elements["users-list"];
+					delete this.elements["name-input"];
+					return React.createElement(Board, { size: this.props.boardSize,
+						myColor: this.state.boardColor,
+						elements: this.elements });
+				case "name-input":
+					delete this.elements["users-list"];
+					delete this.elements["game-board"];
+					return React.createElement(NameInput, { elements: this.elements, width: "300" });
+			}
 		}
 	}]);
 
-	return NameInput;
+	return MultiComponent;
 }(React.Component);

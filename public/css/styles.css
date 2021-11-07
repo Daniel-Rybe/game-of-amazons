@@ -5,6 +5,31 @@
 	position: absolute;
 }
 
+.name-input-wrapper * {
+	position: relative;
+}
+
+.list-wrapper > *{
+	position: relative;
+	margin-left: 3;
+}
+
+.list-wrapper, .name-input-wrapper {
+	width: 300;
+	background-color: rgb(200, 200, 200);
+}
+
+.name-input-wrapper input {
+	margin-left: 3;
+}
+
+.list-wrapper > span, .name-input-wrapper > span {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2;
+	font-size: 20;
+}
+
 .list-name, .resign-button {
 	display: flex;
 	justify-content: center;
@@ -15,12 +40,24 @@
 
 .resign-button {
 	cursor: default;
+	background-color: lightgrey;
 }
 
 .resign-button:hover {
-	background-color: lightgrey;
+	background-color: darkgrey;
 }
 
 .resign-button:active {
 	background-color: grey;
+}
+
+.board-wrapper > * {
+	position: relative;
+}
+
+.board-wrapper span {
+	display: flex;
+	justify-content: center;
+	margin-boton: 2;
+	font-size: 18;
 }

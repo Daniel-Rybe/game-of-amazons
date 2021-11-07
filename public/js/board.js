@@ -79,16 +79,21 @@ var ResignButton = function (_React$Component3) {
   function ResignButton(props) {
     _classCallCheck(this, ResignButton);
 
-    //boardHeight
-    return _possibleConstructorReturn(this, (ResignButton.__proto__ || Object.getPrototypeOf(ResignButton)).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (ResignButton.__proto__ || Object.getPrototypeOf(ResignButton)).call(this, props));
+    //boardSize
+
+
+    _this3.width = 100;
+    _this3.height = 50;
+    _this3.margin = 20;
+    return _this3;
   }
 
   _createClass(ResignButton, [{
     key: "onClick",
     value: function onClick() {
       ws.send(JSON.stringify({ type: "resign" }));
-      ReactDOM.render(React.createElement(List, { width: "300", elemHeight: "30" }), mainContainer);
-      game_board = undefined;
+      mainComponent.setState({ mode: "users-list" });
     }
   }, {
     key: "render",
@@ -96,9 +101,8 @@ var ResignButton = function (_React$Component3) {
       return React.createElement(
         "p",
         { className: "resign-button",
-          style: { left: 0, top: this.props.boardHeight },
-          width: "60",
-          height: "30",
+          style: { left: parseInt(this.props.boardSize) + this.margin, top: (this.props.boardSize - this.height) / 2,
+            width: this.width, height: this.height },
           onClick: this.onClick },
         "Resign"
       );
@@ -115,7 +119,7 @@ var Board = function (_React$Component4) {
     _classCallCheck(this, Board);
 
     var _this4 = _possibleConstructorReturn(this, (Board.__proto__ || Object.getPrototypeOf(Board)).call(this, props));
-    //size myColor
+    //size myColor elements
 
 
     _this4.state = {
@@ -130,7 +134,7 @@ var Board = function (_React$Component4) {
     _this4.onMouseMove = _this4.onMouseMove.bind(_this4);
     _this4.onMouseUp = _this4.onMouseUp.bind(_this4);
 
-    game_board = _this4;
+    _this4.props.elements["game-board"] = _this4;
     return _this4;
   }
 
@@ -234,6 +238,12 @@ var Board = function (_React$Component4) {
           _newPieces.push({ x: _x, y: _y, type: "fire" });
 
           ws.send(JSON.stringify({ type: "fire", x: _x, y: _y }));
+
+          if (this.opponentCantMove()) {
+            console.log('debug');
+            ws.send(JSON.stringify({ type: "end-game" }));
+          }
+
           this.setState({ pieces: _newPieces, activePieceIndex: -1, phase: 2 });
         }
       }
@@ -277,6 +287,72 @@ var Board = function (_React$Component4) {
       return true;
     }
   }, {
+    key: "opponentCantMove",
+    value: function opponentCantMove() {
+      var boardMatrix = [{}, {}, {}, {}, {}, {}];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.state.pieces[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var piece = _step2.value;
+
+          boardMatrix[piece.x][piece.y] = 1;
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.state.pieces[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var _piece = _step3.value;
+
+          if (_piece.type == this.props.myColor || _piece.type == "fire") continue;
+
+          for (var i = -1; i <= 1; i++) {
+            for (var j = -1; j <= 1; j++) {
+              if (i == 0 && j == 0) continue;
+              var x = _piece.x + i;
+              var y = _piece.y + j;
+              if (x < 0 || x > 5 || y < 0 || y > 5) continue;
+              if (!boardMatrix[x][y]) return false;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return true;
+    }
+  }, {
     key: "render",
     value: function render() {
       var pieces = [];
@@ -294,24 +370,24 @@ var Board = function (_React$Component4) {
 
       if (this.state.phase == 0 || this.state.phase == 2) {
         if (this.state.activePieceIndex != -1) {
-          var _piece = this.state.pieces[this.state.activePieceIndex];
+          var _piece2 = this.state.pieces[this.state.activePieceIndex];
           var offset = 0.1 * this.cellSize;
           pieces.push(React.createElement(Piece, {
-            x: _piece.x * this.cellSize - offset / 2,
-            y: _piece.y * this.cellSize - offset / 2,
-            type: _piece.type,
+            x: _piece2.x * this.cellSize - offset / 2,
+            y: _piece2.y * this.cellSize - offset / 2,
+            type: _piece2.type,
             size: this.cellSize + offset,
             key: this.key++ }));
         }
       } else if (this.state.phase == 1) {
         if (this.state.activePieceIndex == -1) console.log("something isn't right...");
 
-        var _piece2 = this.state.pieces[this.state.activePieceIndex];
+        var _piece3 = this.state.pieces[this.state.activePieceIndex];
 
         pieces.push(React.createElement(Piece, {
-          x: _piece2.x * this.cellSize,
-          y: _piece2.y * this.cellSize,
-          type: _piece2.type,
+          x: _piece3.x * this.cellSize,
+          y: _piece3.y * this.cellSize,
+          type: _piece3.type,
           size: this.cellSize,
           key: this.key++ }));
 
@@ -319,36 +395,36 @@ var Board = function (_React$Component4) {
           for (var j = -1; j <= 1; j++) {
             if (_i == 0 && j == 0) continue;
 
-            var x = _piece2.x + _i;
-            var y = _piece2.y + j;
+            var x = _piece3.x + _i;
+            var y = _piece3.y + j;
 
             while (x >= 0 && x <= 5 && y >= 0 && y <= 5) {
 
               var cellHasPiece = false;
-              var _iteratorNormalCompletion2 = true;
-              var _didIteratorError2 = false;
-              var _iteratorError2 = undefined;
+              var _iteratorNormalCompletion4 = true;
+              var _didIteratorError4 = false;
+              var _iteratorError4 = undefined;
 
               try {
-                for (var _iterator2 = this.state.pieces[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                  var _piece3 = _step2.value;
+                for (var _iterator4 = this.state.pieces[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                  var _piece4 = _step4.value;
 
-                  if (_piece3.x == x && _piece3.y == y) {
+                  if (_piece4.x == x && _piece4.y == y) {
                     cellHasPiece = true;
                     break;
                   }
                 }
               } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                    _iterator2.return();
+                  if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                    _iterator4.return();
                   }
                 } finally {
-                  if (_didIteratorError2) {
-                    throw _iteratorError2;
+                  if (_didIteratorError4) {
+                    throw _iteratorError4;
                   }
                 }
               }
@@ -371,16 +447,25 @@ var Board = function (_React$Component4) {
 
       return React.createElement(
         "div",
-        { className: "board",
-          onMouseDown: this.onMouseDown,
-          onMouseMove: this.onMouseMove,
-          onMouseUp: this.onMouseUp,
-          onTouchStart: this.onMouseDown,
-          onTouchMove: this.onMouseMove,
-          onTouchEnd: this.onMouseEnd },
-        React.createElement(BoardBackGround, { size: this.props.size }),
-        pieces,
-        React.createElement(ResignButton, { boardHeight: this.props.size })
+        { className: "board-wrapper", style: { width: this.props.size, left: (window.innerWidth - this.props.size) / 2, top: 50 } },
+        React.createElement(
+          "span",
+          null,
+          "You are playing as " + this.props.myColor + ". It's your " + (this.state.phase == 2 ? "opponents" : "") + " move."
+        ),
+        React.createElement(
+          "div",
+          { className: "board",
+            onMouseDown: this.onMouseDown,
+            onMouseMove: this.onMouseMove,
+            onMouseUp: this.onMouseUp,
+            onTouchStart: this.onMouseDown,
+            onTouchMove: this.onMouseMove,
+            onTouchEnd: this.onMouseEnd },
+          React.createElement(BoardBackGround, { size: this.props.size }),
+          pieces,
+          React.createElement(ResignButton, { boardSize: this.props.size })
+        )
       );
     }
   }]);

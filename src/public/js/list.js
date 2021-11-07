@@ -69,14 +69,13 @@ class ListButton extends React.Component {
 
 class ListItem extends React.Component {
 	constructor(props) {
-		//name, width, height, buttons onclick, id
+		//name, width, height, buttons onclick
 		super(props);
 	}
 
 	render(props) {
 		return (
-			<div className="list-item-wrapper"
-			style={{left: 0, top: this.props.height * this.props.id}}>
+			<div className="list-item-wrapper">
 				<span className="list-name"
 				style={{width: this.props.width - this.props.height, height: this.props.height}} >
 				{this.props.name}
@@ -95,7 +94,7 @@ class ListItem extends React.Component {
 
 class List extends React.Component {
 	constructor(props) {
-		//width, elemHeight
+		//width, elemHeight elements
 		super(props);
 
 		this.state = {elems: users_online.copyWithin()};
@@ -103,7 +102,7 @@ class List extends React.Component {
 
 		this.onclick = this.onclick.bind(this);
 
-		users_list = this;
+		this.props.elements["users_list"] = this;
 	}
 
 	onclick(name) {
@@ -128,23 +127,23 @@ class List extends React.Component {
 
 	render() {
 		let listItems = [];
-		let id = 0;
 		let key = 0;
 
 		for (let elemName of this.state.elems) {
 			listItems.push(
 				<ListItem name={elemName}
-				width={this.props.width}
+				width={this.props.width - 6}
 				height={this.props.elemHeight}
 				buttons={this.buttons}
 				onclick={this.onclick}
-				id={id++}
 				key={key++} />
 			);
 		}
 
 		return (
-			<div className="list-wrapper">
+			<div className="list-wrapper"
+			style={{left: (window.innerWidth - this.props.width) / 2, top: 50, height: window.innerHeight - 100}}>
+				<span>{listItems.length > 0 ? "Players online:" : "Nobody's online right now :("}</span>
 				{listItems}
 			</div>
 		);

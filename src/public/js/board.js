@@ -51,22 +51,24 @@ class Piece extends React.Component {
 
 class ResignButton extends React.Component {
   constructor(props) {
-    //boardHeight
+    //boardSize
     super(props);
+
+    this.width = 100;
+    this.height = 50;
+    this.margin = 20;
   }
 
   onClick() {
     ws.send(JSON.stringify({type:"resign"}));
-    ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer);
-    game_board = undefined;
+    mainComponent.setState({mode: "users-list"});
   }
 
   render() {
     return (
       <p className="resign-button"
-      style={{left: 0, top: this.props.boardHeight}}
-      width="60"
-      height="30"
+      style={{left: parseInt(this.props.boardSize) + this.margin, top: (this.props.boardSize - this.height) / 2,
+              width: this.width, height: this.height}}
       onClick={this.onClick} >
       Resign
       </p>
@@ -76,7 +78,7 @@ class ResignButton extends React.Component {
 
 class Board extends React.Component {
   constructor(props) {
-    //size myColor
+    //size myColor elements
     super(props);
 
     this.state = {
@@ -96,7 +98,7 @@ class Board extends React.Component {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
 
-    game_board = this;
+    this.props.elements["game-board"] = this;
   }
 
   onMouseDown(e) {
@@ -196,6 +198,12 @@ class Board extends React.Component {
         newPieces.push({x: x, y: y, type: "fire"});
 
         ws.send(JSON.stringify({type: "fire", x: x, y: y}));
+
+        if (this.opponentCantMove()) {
+          console.log('debug');
+          ws.send(JSON.stringify({type: "end-game"}));
+        }
+
         this.setState({pieces: newPieces, activePieceIndex: -1, phase: 2});
       }
     }
@@ -215,6 +223,29 @@ class Board extends React.Component {
 
       if ((piece.x - x) * (this.lastJ - y) == (piece.y - y) * (this.lastI - x))
         return false;
+    }
+
+    return true;
+  }
+
+  opponentCantMove() {
+    let boardMatrix = [{}, {}, {}, {}, {}, {}];
+    for (let piece of this.state.pieces)
+      boardMatrix[piece.x][piece.y] = 1;
+
+    for (let piece of this.state.pieces) {
+      if (piece.type == this.props.myColor || piece.type == "fire")
+        continue;
+
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i == 0 && j == 0) continue;
+          let x = piece.x + i;
+          let y = piece.y + j;
+          if (x < 0 || x > 5 || y < 0 || y > 5) continue;
+          if (!boardMatrix[x][y]) return false;
+        }
+      }
     }
 
     return true;
@@ -300,16 +331,19 @@ class Board extends React.Component {
     }
 
     return (
-      <div className="board"
-      onMouseDown={this.onMouseDown}
-      onMouseMove={this.onMouseMove}
-      onMouseUp={this.onMouseUp}
-      onTouchStart={this.onMouseDown}
-      onTouchMove={this.onMouseMove}
-      onTouchEnd={this.onMouseEnd}>
-        <BoardBackGround size={this.props.size} />
-        {pieces}
-        <ResignButton boardHeight={this.props.size} />
+      <div className="board-wrapper" style={{width: this.props.size, left: (window.innerWidth - this.props.size) / 2, top: 50}}>
+        <span>{`You are playing as ${this.props.myColor}. It's your ${this.state.phase == 2 ? "opponents" : ""} move.`}</span>
+        <div className="board"
+        onMouseDown={this.onMouseDown}
+        onMouseMove={this.onMouseMove}
+        onMouseUp={this.onMouseUp}
+        onTouchStart={this.onMouseDown}
+        onTouchMove={this.onMouseMove}
+        onTouchEnd={this.onMouseEnd}>
+          <BoardBackGround size={this.props.size} />
+          {pieces}
+          <ResignButton boardSize={this.props.size} />
+        </div>
       </div>
     );
   }

@@ -92,7 +92,7 @@ var ListItem = function (_React$Component2) {
 	function ListItem(props) {
 		_classCallCheck(this, ListItem);
 
-		//name, width, height, buttons onclick, id
+		//name, width, height, buttons onclick
 		return _possibleConstructorReturn(this, (ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call(this, props));
 	}
 
@@ -101,8 +101,7 @@ var ListItem = function (_React$Component2) {
 		value: function render(props) {
 			return React.createElement(
 				"div",
-				{ className: "list-item-wrapper",
-					style: { left: 0, top: this.props.height * this.props.id } },
+				{ className: "list-item-wrapper" },
 				React.createElement(
 					"span",
 					{ className: "list-name",
@@ -128,7 +127,7 @@ var List = function (_React$Component3) {
 		_classCallCheck(this, List);
 
 		var _this3 = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
-		//width, elemHeight
+		//width, elemHeight elements
 
 
 		_this3.state = { elems: users_online.copyWithin() };
@@ -136,7 +135,7 @@ var List = function (_React$Component3) {
 
 		_this3.onclick = _this3.onclick.bind(_this3);
 
-		users_list = _this3;
+		_this3.props.elements["users_list"] = _this3;
 		return _this3;
 	}
 
@@ -162,7 +161,6 @@ var List = function (_React$Component3) {
 		key: "render",
 		value: function render() {
 			var listItems = [];
-			var id = 0;
 			var key = 0;
 
 			var _iteratorNormalCompletion = true;
@@ -174,11 +172,10 @@ var List = function (_React$Component3) {
 					var elemName = _step.value;
 
 					listItems.push(React.createElement(ListItem, { name: elemName,
-						width: this.props.width,
+						width: this.props.width - 6,
 						height: this.props.elemHeight,
 						buttons: this.buttons,
 						onclick: this.onclick,
-						id: id++,
 						key: key++ }));
 				}
 			} catch (err) {
@@ -198,7 +195,13 @@ var List = function (_React$Component3) {
 
 			return React.createElement(
 				"div",
-				{ className: "list-wrapper" },
+				{ className: "list-wrapper",
+					style: { left: (window.innerWidth - this.props.width) / 2, top: 50, height: window.innerHeight - 100 } },
+				React.createElement(
+					"span",
+					null,
+					listItems.length > 0 ? "Players online:" : "Nobody's online right now :("
+				),
 				listItems
 			);
 		}
