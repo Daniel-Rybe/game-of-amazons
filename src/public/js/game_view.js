@@ -5,7 +5,7 @@
 //ReactDOM.render(gameBoard, document.querySelector('#board-container'));
 
 let HOST = location.origin.replace(/^http/, 'ws')
-let ws = new WebSocket(HOST);
+let ws = new WebSocket(HOST, 'echo-protocol');
 
 ws.addEventListener('message', event => {
 	handleMessage(JSON.parse(event.data));
