@@ -57,7 +57,7 @@ class ResignButton extends React.Component {
 
   onClick() {
     ws.send(JSON.stringify({type:"resign"}));
-    ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer, (ref) => {users_list = ref});
+    ReactDOM.render(<List width="300" elemHeight="30" />, mainContainer);
     game_board = undefined;
   }
 
