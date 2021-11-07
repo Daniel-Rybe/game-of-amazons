@@ -1,0 +1,55 @@
+client -> server:
+
+type: "set-name" | "play-request" | "play-request-cancel" | "ready-to-play" | "resign" | "move" | "fire" | "end-game"
+
+type == "set-name":
+	name: <string>
+
+type == "play-request":
+	name: <string>
+
+type == "move":
+	prevX: <int>
+	prevY: <int>
+	newX: <int>
+	newY: <int>
+
+type == "fire":
+	x: <int>
+	y: <int>
+
+server -> client:
+
+type: "set-name-result" | "player-join" | "player-leave" | "get-ready-to-play" | "move" | "fire" | "play-request-from" | "play-request-cancel-from" | "opponent-resigned" || "current-player-list" | "opponent-disconnected"
+
+type == "set-name-result":
+	result: "ok" | "name-taken"
+
+type == "player-join":
+	name: <string>
+
+type == "player-leave":
+	name: <string>
+
+type == "get-ready-to-play":
+	color: "white" | "black"
+	name: <string>
+
+type == "move":
+	prevX: <int>
+	prevY: <int>
+	newX: <int>
+	newY: <int>
+
+type == "fire":
+	x: <int>
+	y: <int>
+
+type == "play-request-from":
+	name: <string>
+
+type == "play-request-cancel-from":
+	name: <string>
+
+type == "current-player-list":
+	names: [<string>, ...]
