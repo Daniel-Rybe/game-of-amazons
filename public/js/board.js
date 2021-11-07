@@ -350,7 +350,10 @@ var Board = function (_React$Component4) {
         { className: "board",
           onMouseDown: this.onMouseDown,
           onMouseMove: this.onMouseMove,
-          onMouseUp: this.onMouseUp },
+          onMouseUp: this.onMouseUp,
+          onTouchStart: this.onMouseDown,
+          onTouchMove: this.onMouseMove,
+          onTouchEnd: this.onMouseEnd },
         React.createElement(BoardBackGround, { size: this.props.size }),
         pieces,
         React.createElement(ResignButton, { boardHeight: this.props.size })
