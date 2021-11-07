@@ -58,7 +58,7 @@ function handleMessage(messageObj) {
 			break;
 
 		case "get-ready-to-play":
-			ReactDOM.render(<Board size="300" myColor={messageObj.color} />, mainContainer);
+			ReactDOM.render(<Board size="500" myColor={messageObj.color} />, mainContainer);
 			users_list = undefined;
 			ws.send(JSON.stringify({type: "ready-to-play"}));
 			break;

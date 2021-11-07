@@ -12,3 +12,15 @@
 	border: 1px solid black;
 	box-sizing: border-box;
 }
+
+.resign-button {
+	cursor: default;
+}
+
+.resign-button:hover {
+	background-color: lightgrey;
+}
+
+.resign-button:active {
+	background-color: grey;
+}
