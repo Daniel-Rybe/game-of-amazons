@@ -5,7 +5,7 @@
 //ReactDOM.render(gameBoard, document.querySelector('#board-container'));
 
 var HOST = location.origin.replace(/^http/, 'ws');
-var ws = new WebSocket(HOST);
+var ws = new WebSocket(HOST, 'echo-protocol');
 
 ws.addEventListener('message', function (event) {
 	handleMessage(JSON.parse(event.data));
@@ -23,7 +23,9 @@ function handleMessage(messageObj) {
 
 	switch (messageObj.type) {
 		case "set-name-result":
-			if (messageObj.result == "ok") users_list = ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
+			if (messageObj.result == "ok") ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
+				users_list = ref;
+			});
 			nameInput = undefined;
 			break;
 
@@ -53,20 +55,26 @@ function handleMessage(messageObj) {
 			break;
 
 		case "get-ready-to-play":
-			game_board = ReactDOM.render(React.createElement(Board, { size: '300', myColor: messageObj.color }), mainContainer);
+			ReactDOM.render(React.createElement(Board, { size: '300', myColor: messageObj.color }), mainContainer, function (ref) {
+				game_board = ref;
+			});
 			users_list = undefined;
 			ws.send(JSON.stringify({ type: "ready-to-play" }));
 			break;
 
 		case "opponent-resigned":
 			alert("Opponent resigned. You win!");
-			users_list = ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
+			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
+				users_list = ref;
+			});
 			game_board = undefined;
 			break;
 
 		case "opponent-disconnected":
 			alert("Opponent disconnected. You win!");
-			users_list = ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer);
+			ReactDOM.render(React.createElement(List, { width: '300', elemHeight: '30' }), mainContainer, function (ref) {
+				users_list = ref;
+			});
 			game_board = undefined;
 			break;
 
@@ -119,4 +127,7 @@ function handleMessage(messageObj) {
 	}
 }
 
-var nameInput = ReactDOM.render(React.createElement(NameInput, null), mainContainer);
+var nameInput = void 0;
+ReactDOM.render(React.createElement(NameInput, null), mainContainer, function (ref) {
+	nameInput = ref;
+});

@@ -87,7 +87,9 @@ var ResignButton = function (_React$Component3) {
     key: "onClick",
     value: function onClick() {
       ws.send(JSON.stringify({ type: "resign" }));
-      users_list = ReactDOM.render(React.createElement(List, { width: "300", elemHeight: "30" }), mainContainer);
+      ReactDOM.render(React.createElement(List, { width: "300", elemHeight: "30" }), mainContainer, function (ref) {
+        users_list = ref;
+      });
       game_board = undefined;
     }
   }, {
